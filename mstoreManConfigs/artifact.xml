@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?><artifacts>
-    <artifact name="mstoreMan_API" groupId="com.example.api" version="1.0.0" type="synapse/api" serverRole="EnterpriseServiceBus">
-        <file>src/main/synapse-config/api/mstoreMan_API.xml</file>
+    <artifact name="SimpleStockQuoteService" groupId="com.example.proxy-service" version="1.0.0" type="synapse/proxy-service" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/proxy-services/SimpleStockQuoteService.xml</file>
     </artifact>
-    <artifact name="mstoreMan_API_swagger" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
-        <file>src/main/resources/metadata/mstoreMan_API_swagger.yaml</file>
+    <artifact name="_proxy_metadata" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/_proxy_metadata.yaml</file>
     </artifact>
-    <artifact name="mstoreMan_API_metadata" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
-        <file>src/main/resources/metadata/mstoreMan_API_metadata.yaml</file>
+    <artifact name="ArchibusStock_AFM_Changes_MP_EP_v1" groupId="com.example.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/ArchibusStock_AFM_Changes_MP_EP_v1.xml</file>
     </artifact>
-    <artifact name="ArchibusStock_AFM_Changes_Failed_MQ" groupId="com.example.message-store" version="1.0.0" type="synapse/message-store" serverRole="EnterpriseServiceBus">
-        <file>src/main/synapse-config/message-stores/ArchibusStock_AFM_Changes_Failed_MQ.xml</file>
+    <artifact name="trigger-ms-copy" groupId="com.example.api" version="1.0.0" type="synapse/api" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/api/trigger-ms-copy.xml</file>
     </artifact>
-    <artifact name="ArchibusStock_AFM_Changes_MQ" groupId="com.example.message-store" version="1.0.0" type="synapse/message-store" serverRole="EnterpriseServiceBus">
-        <file>src/main/synapse-config/message-stores/ArchibusStock_AFM_Changes_MQ.xml</file>
+    <artifact name="trigger-ms-copy_swagger" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/trigger-ms-copy_swagger.yaml</file>
+    </artifact>
+    <artifact name="trigger-ms-copy_metadata" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/trigger-ms-copy_metadata.yaml</file>
     </artifact>
 </artifacts>

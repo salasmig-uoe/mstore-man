@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/trigger-ms-copy" name="trigger-ms-copy" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="POST" uri-template="/quote">
+        <inSequence>
+            <property expression="get-property('request')" name="originalPayload" scope="default" type="STRING"/>
+            <property name="messageType" scope="axis2" type="STRING" value="application/soap+xml"/>
+            <property name="SOAPAction" scope="transport" type="STRING" value="urn:SimpleStockQuoteService"/>
+            <payloadFactory media-type="xml">
+                <format>
+                    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">
+                        <soapenv:Header/>
+                        <soapenv:Body>
+                            <tem:GetQuote>
+                                <tem:Message>$1</tem:Message>
+                            </tem:GetQuote>
+                        </soapenv:Body>
+                    </soapenv:Envelope>
+                </format>
+                <args>
+                    <arg evaluator="xml" expression="$ctx:originalPayload"/>
+                </args>
+            </payloadFactory>
+            <send>
+                <endpoint key="ArchibusStock_AFM_Changes_MP_EP_v1"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence>
+            <log level="full"/>
+            <send/>
+        </faultSequence>
+    </resource>
+</api>

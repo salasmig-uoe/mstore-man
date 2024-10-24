@@ -1,17 +1,22 @@
 [transport.local.sender.nonblocking]
 enable = true
 
-[[transport.jms.listener]]
-name = "myQueueConnectionFactory"
+[[transport.jms.sender]]
+name = "myQueueSender"
 parameter.initial_naming_factory = "org.apache.activemq.jndi.ActiveMQInitialContextFactory"
-parameter.provider_url = $env{JMS_PROVIDER_URL}
+parameter.provider_url = "$env{JMS_PROVIDER_URL}"
+parameter.username = "$env{JMS_USERNAME}"
+parameter.password = "$env{JMS_PASSWORD}"
+parameter.connection_factory_name = "QueueConnectionFactory"
+parameter.connection_factory_type = "queue"
+parameter.cache_level = "producer"
+
+[[transport.jms.listener]]
+name = "myQueueListener"
+parameter.initial_naming_factory = "org.apache.activemq.jndi.ActiveMQInitialContextFactory"
+parameter.provider_url = "$env{JMS_PROVIDER_URL}"
+parameter.username = "$env{JMS_USERNAME}"
+parameter.password = "$env{JMS_PASSWORD}"
 parameter.connection_factory_name = "QueueConnectionFactory"
 parameter.connection_factory_type = "queue"
 parameter.cache_level = "consumer"
-
-[[transport.jms.listener]]
-name = "default"
-parameter.initial_naming_factory = "org.apache.activemq.jndi.ActiveMQInitialContextFactory"
-parameter.provider_url = $env{JMS_PROVIDER_URL}
-parameter.connection_factory_name = "QueueConnectionFactory"
-parameter.connection_factory_type = "queue"
