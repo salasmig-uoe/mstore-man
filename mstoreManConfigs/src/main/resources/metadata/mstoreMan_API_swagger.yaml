@@ -11,3 +11,38 @@ paths:
       responses:
         default:
           description: Default response
+  /activeMQ/:
+    post:
+      requestBody:
+        description: Sample Payload
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payload:
+                  type: object
+        required: false
+      responses:
+        default:
+          description: Default response
+  /activeMQ/{broker}/{queue}/count:
+    get:
+      parameters:
+      - name: broker
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: queue
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        default:
+          description: Default response

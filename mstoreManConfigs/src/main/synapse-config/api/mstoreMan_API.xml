@@ -5,4 +5,103 @@
         <outSequence/>
         <faultSequence/>
     </resource>
+    <resource methods="POST" uri-template="/activeMQ/">
+        <inSequence>
+            <log level="custom">
+                <property name="MSG" value="activemqExample_v1_book_api - POST - /mock/activeMQ - init"/>
+            </log>
+            <payloadFactory media-type="xml">
+                <format>
+                    <m:getQuote xmlns:m="http://services.samples">
+                        <m:request>
+                            <m:book>
+                                <m:isbn>$1</m:isbn>
+                                <m:release>$2</m:release>
+                            </m:book>
+                        </m:request>
+                    </m:getQuote>
+                </format>
+                <args>
+                    <arg evaluator="json" expression="$.isbn"/>
+                    <arg evaluator="json" expression="$.year"/>
+                </args>
+            </payloadFactory>
+            <property name="OUT_ONLY" scope="default" type="STRING" value="true"/>
+            <property expression="get-property('env', 'jmsurl')" name="jmsURL" scope="default" type="STRING"/>
+            <property expression="ArchibusStock_AFM_Changes_MQ" name="jmsQUEUE" scope="default" type="STRING"/>
+            <property expression="concat('jms:/', $ctx:jmsQUEUE,'?transport.jms.ConnectionFactoryJNDIName=QueueConnectionFactory&amp;java.naming.provider.url=', $ctx:jmsURL,'&amp;java.naming.factory.initial=org.apache.activemq.jndi.ActiveMQInitialContextFactory&amp;transport.jms.DestinationType=queue&amp;redeliveryPolicy.redeliveryDelay=30000&amp;maximumRedeliveries=10')" name="uri.var.jmsurl" scope="default" type="STRING"/>
+            <log level="custom">
+                <property name="MSG" value="{$ctx:uri.var.jmsurl}"/>
+            </log>
+            <call>
+                <endpoint>
+                    <address uri="{uri.var.jmsurl}">
+                        <suspendOnFailure>
+                            <initialDuration>-1</initialDuration>
+                            <progressionFactor>1</progressionFactor>
+                        </suspendOnFailure>
+                        <markForSuspension>
+                            <retriesBeforeSuspension>0</retriesBeforeSuspension>
+                        </markForSuspension>
+                    </address>
+                </endpoint>
+            </call>
+            <log level="custom">
+                <property name="MSG" value="activemqExample_v1_book_api - POST - /mock/activeMQ - end"/>
+            </log>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" uri-template="/activeMQ/{broker}/{queue}/count">
+        <inSequence>
+            <log level="custom">
+                <property name="MSG" value="activemqExample_v1_book_api - POST - /mock/activeMQ/broker/queue/count - init"/>
+                <property expression="$ctx:uri.var.broker" name="BROKER"/>
+                <property expression="$ctx:uri.var.queue" name="QUEUE"/>
+            </log>
+            <property expression="fn:concat('Basic ', base64Encode('admin:admin'))" name="Authorization" scope="transport" type="STRING"/>
+            <send>
+                <endpoint name="mock_v1_activemqCount_httpEp">
+                    <http method="get" uri-template="http://activemq:8161/api/jolokia/read/org.apache.activemq:type=Broker,brokerName={uri.var.broker},destinationType=Queue,destinationName={uri.var.queue}/QueueSize">
+                        <suspendOnFailure>
+                            <initialDuration>-1</initialDuration>
+                            <progressionFactor>1</progressionFactor>
+                        </suspendOnFailure>
+                        <markForSuspension>
+                            <retriesBeforeSuspension>0</retriesBeforeSuspension>
+                        </markForSuspension>
+                    </http>
+                </endpoint>
+            </send>
+        </inSequence>
+        <outSequence>
+            <property name="ContentType" scope="axis2" type="STRING" value="application/json"/>
+            <property name="messageType" scope="axis2" type="STRING" value="application/json"/>
+            <log level="full">
+                <property name="MSG" value="activemqExample_v1_book_api - POST - /mock/activeMQ/broker/queue/count - out sequence"/>
+                <property expression="json-eval($.value)" name="value"/>
+            </log>
+            <switch source="json-eval($.status)">
+                <case regex="200">
+                    <payloadFactory media-type="json">
+                        <format> { "count": $1 } </format>
+                        <args>
+                            <arg evaluator="json" expression="$.value"/>
+                        </args>
+                    </payloadFactory>
+                </case>
+                <default>
+                    <property name="HTTP_SC" scope="axis2" type="STRING" value="500"/>
+                    <payloadFactory media-type="json">
+                        <format>{ "msg": "Unexpected error"}</format>
+                        <args/>
+                    </payloadFactory>
+                </default>
+            </switch>
+            <respond/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
 </api>
